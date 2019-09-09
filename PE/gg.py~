@@ -1,0 +1,5 @@
+maxn = 0
+be = 0
+for i in range(0, 1000):
+    
+print be

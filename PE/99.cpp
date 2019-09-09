@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e6 + 10;
+int a[N], b[N], c[N], be = 0;
+
+bool check() {
+  if(b[0] > c[0]) return true;
+  if(b[0] < c[0]) return false;
+  for(int i = c[0]; i >= 1; --i)
+    if(b[i] > c[i]) return true;
+    else if(b[i] < c[i]) return false;
+  return true;
+}
+
+void upd(int id) {
+  if(check()) {
+    for(int i = 1; i <= b[0]; ++i)
+      c[i] = b[i];
+    id = be;
+  }
+}
+
+int d[N];
+void mul(int a[], int b[]) {
+  memset(d, 0, sizeof d);
+  d[0] = a[0] + b[0] + 1;
+  for(int i = 1; i <= a[0]; ++i)
+    for(int j = 1; j <= b[0]; ++j) {
+      d[i + j - 1] += a[i] * b[j];   
+    }
+  while(d[0] > 1 && !d[d[0]]) --d[0];
+  for(int i = 0; i <= d[0]; ++i)
+    a[i] = d[i];
+}
+
+void q_pow(int y) {
+  memset(b, 0, sizeof b);
+  b[0] = b[1] = 1;
+  for(; y; y >>= 1) {
+    if(y & 1) mul(b, a);
+    mul(a, a);
+  }
+}
+
+void read(int &x) {
+  char ch = getchar(); x = 0;
+  for(; ch < '0' || ch > '9'; ch = getchar()) ;
+  for(; ch >= '0' && ch <= '9'; ch = getchar()) x = (x << 1) + (x << 3) + (ch ^ 48);
+}
+
+int main() {
+  int n = 1000;
+  for(int i = 1, x, y; i <= n; ++i) {
+    read(x), read(y);
+    printf("%d %d\n", x, y);
+    memset(a, 0, sizeof a);
+    for(; x; x /= 10) a[++a[0]] = x;
+    q_pow(y);
+    upd(i);
+  }
+  printf("%d\n", be);
+  return 0;
+}
